@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "blockstoparts",
+  "version": "$version",
+
+  "name": "Blocks to Parts",
+  "description": "Turn your ordinary blocks into multiparts!",
+  "authors": [
+    "Juuz"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Juuxel/BlocksToParts",
+    "sources": "https://github.com/Juuxel/BlocksToParts"
+  },
+
+  "license": "MPL-2.0",
+  "icon": "assets/blockstoparts/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": ["juuxel.blockstoparts.client.BlocksToPartsClient"]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "libmultipart": "^0.2.0"
+  }
+}
