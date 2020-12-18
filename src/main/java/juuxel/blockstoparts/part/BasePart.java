@@ -1,19 +1,28 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 package juuxel.blockstoparts.part;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
-import alexiil.mc.lib.multipart.api.MultipartContainer;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
+import juuxel.blockstoparts.category.Categorizable;
+import juuxel.blockstoparts.category.CategorySet;
+import juuxel.blockstoparts.util.BtpUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public abstract class BasePart extends AbstractPart implements Categorizable {
@@ -32,14 +41,43 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
     }
 
     protected final void removeAndDrop() {
-        DefaultedList<ItemStack> stacks = DefaultedList.of();
-        addDrops(stacks);
-        MultipartContainer container = this.holder.getContainer();
-        World world = container.getMultipartWorld();
-        BlockPos pos = container.getMultipartPos();
-        ItemScatterer.spawn(world, pos, stacks);
-        world.playLevelEvent(2001, pos, Block.getRawIdFromState(getBlockState()));
+        drop();
+        getWorld().syncWorldEvent(2001, getPos(), Block.getRawIdFromState(getBlockState()));
         this.holder.remove();
+    }
+
+    private void drop() {
+        Vec3d pos = Vec3d.ofCenter(getPos());
+        LootContext context = new LootContext.Builder((ServerWorld) getWorld())
+            .random(getWorld().getRandom())
+            .parameter(LootContextParameters.BLOCK_STATE, getBlockState())
+            .parameter(LootContextParameters.ORIGIN, pos)
+            .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
+            .build(LootContextTypes.BLOCK);
+
+        ItemDropTarget dropTarget = new ItemDropTarget() {
+            @Override
+            public void drop(ItemStack stack) {
+                drop(stack, pos);
+            }
+
+            @Override
+            public void drop(ItemStack stack, Vec3d pos) {
+                ItemScatterer.spawn(getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+
+            @Override
+            public void drop(ItemStack stack, Vec3d pos, Vec3d velocity) {
+                drop(stack, pos);
+            }
+
+            @Override
+            public boolean dropsAsEntity() {
+                return false;
+            }
+        };
+
+        addDrops(dropTarget, context);
     }
 
     @Override
@@ -48,12 +86,32 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
     }
 
     @Override
-    public Categories getCategories() {
-        return Categories.EMPTY;
+    public CategorySet getCategories() {
+        return CategorySet.EMPTY;
     }
 
     @Override
     public boolean canOverlapWith(AbstractPart other) {
         return other instanceof Categorizable && getCategories().canOverlapWith(((Categorizable) other).getCategories());
+    }
+
+    @Override
+    public void addDrops(ItemDropTarget target, LootContext context) {
+        target.dropAll(getBlockState().getDroppedStacks(BtpUtil.toBlockLootContext(context)));
+    }
+
+    @Override
+    protected void spawnBreakParticles() {
+        spawnBreakParticles(getBlockState());
+    }
+
+    @Override
+    public float calculateBreakingDelta(PlayerEntity player) {
+        return calculateBreakingDelta(player, getBlockState());
+    }
+
+    @Override
+    protected void playBreakSound() {
+        playBreakSound(getBlockState());
     }
 }

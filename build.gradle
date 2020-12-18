@@ -1,7 +1,8 @@
 plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
+    id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
-    id 'com.jfrog.artifactory' version '4.9.0'
+    id 'com.jfrog.artifactory' version '4.18.2'
+    id 'net.minecrell.licenser' version '0.4.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -15,28 +16,10 @@ if (file('private.gradle').exists()) {
     apply from: 'private.gradle'
 }
 
-minecraft {
-}
-
 repositories {
     maven {
         name = "BuildCraft"
         url = "https://mod-buildcraft.com/maven"
-    }
-
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven"
-    }
-
-    maven {
-        name = "Cotton"
-        url = "http://server.bbkr.space:8081/artifactory/libs-release"
-    }
-
-    maven {
-        name = "Swordglowsblue"
-        url = "https://maven.swordglowsblue.com"
     }
 }
 
@@ -55,13 +38,8 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
         expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
     }
 }
 
@@ -70,18 +48,24 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+java {
+    withSourcesJar()
 }
 
 jar {
     from 'LICENSE'
+}
+
+license {
+    header = file("HEADER.txt")
+    include("**/*.java") // Only Java files, no resources
 }
 
 // configure the maven publication

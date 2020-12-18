@@ -1,8 +1,10 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
-package juuxel.blockstoparts.client;
+package juuxel.blockstoparts.impl;
 
 import alexiil.mc.lib.multipart.api.render.PartModelBaker;
 import alexiil.mc.lib.multipart.api.render.PartRenderContext;
@@ -22,9 +24,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
-public enum VanillaPartModel implements PartModelBaker<VanillaModelKey> {
-    INSTANCE;
-
+final class VanillaPartModel<K extends VanillaModelKey> implements PartModelBaker<K> {
     /**
      * A cache for ForwardingBakedModels that wrap the original models.
      * Multipart-format blockstate files create models that don't really work with passing
@@ -33,27 +33,27 @@ public enum VanillaPartModel implements PartModelBaker<VanillaModelKey> {
      */
     private final Map<BlockState, BakedModel> modelWrappers = new HashMap<>();
 
-    private BakedModel getWrapper(VanillaModelKey key) {
+    private BakedModel getWrapper(K key) {
         return modelWrappers.computeIfAbsent(
-                key.getState(),
-                state -> new ForwardingBakedModel() {
-                    {
-                        wrapped = MinecraftClient.getInstance()
-                                .getBakedModelManager()
-                                .getBlockStateMaps()
-                                .getModel(key.getState());
-                    }
-
-                    @Override
-                    public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
-                        return super.getQuads(state, face, rand);
-                    }
+            key.getState(),
+            state -> new ForwardingBakedModel() {
+                {
+                    wrapped = MinecraftClient.getInstance()
+                        .getBakedModelManager()
+                        .getBlockModels()
+                        .getModel(key.getState());
                 }
+
+                @Override
+                public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
+                    return super.getQuads(state, face, rand);
+                }
+            }
         );
     }
 
     @Override
-    public void emitQuads(VanillaModelKey key, PartRenderContext ctx) {
+    public void emitQuads(K key, PartRenderContext ctx) {
         ctx.fallbackConsumer().accept(getWrapper(key));
     }
 }
