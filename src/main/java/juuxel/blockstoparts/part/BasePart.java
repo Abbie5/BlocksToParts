@@ -101,17 +101,7 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
     }
 
     @Override
-    protected void spawnBreakParticles() {
-        spawnBreakParticles(getBlockState());
-    }
-
-    @Override
-    public float calculateBreakingDelta(PlayerEntity player) {
-        return calculateBreakingDelta(player, getBlockState());
-    }
-
-    @Override
-    protected void playBreakSound() {
-        playBreakSound(getBlockState());
+    protected final BlockState getClosestBlockState() {
+        return getBlockState();
     }
 }
