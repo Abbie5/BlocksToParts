@@ -7,8 +7,8 @@
 package juuxel.blockstoparts.impl;
 
 import alexiil.mc.lib.multipart.api.render.PartStaticModelRegisterEvent;
-import juuxel.blockstoparts.model.DynamicVanillaModelKey;
-import juuxel.blockstoparts.model.StaticVanillaModelKey;
+import juuxel.blockstoparts.api.model.DynamicVanillaModelKey;
+import juuxel.blockstoparts.api.model.StaticVanillaModelKey;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package juuxel.blockstoparts.util;
+package juuxel.blockstoparts.api.util;
 
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;

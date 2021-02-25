@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package juuxel.blockstoparts.category;
+package juuxel.blockstoparts.api.category;
 
 import net.minecraft.util.Identifier;
 

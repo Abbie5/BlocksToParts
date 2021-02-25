@@ -4,17 +4,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package juuxel.blockstoparts.part;
+package juuxel.blockstoparts.api.part;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
-import juuxel.blockstoparts.category.Categorizable;
-import juuxel.blockstoparts.category.CategorySet;
-import juuxel.blockstoparts.util.BtpUtil;
+import juuxel.blockstoparts.api.category.Categorizable;
+import juuxel.blockstoparts.api.category.CategorySet;
+import juuxel.blockstoparts.api.util.BtpUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;

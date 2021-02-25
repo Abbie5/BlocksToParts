@@ -8,7 +8,7 @@ package juuxel.blockstoparts.impl;
 
 import alexiil.mc.lib.multipart.api.render.PartModelBaker;
 import alexiil.mc.lib.multipart.api.render.PartRenderContext;
-import juuxel.blockstoparts.model.VanillaModelKey;
+import juuxel.blockstoparts.api.model.VanillaModelKey;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;

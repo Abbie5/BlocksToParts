@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package juuxel.blockstoparts.model;
+package juuxel.blockstoparts.api.model;
 
 import net.minecraft.block.BlockState;
 
