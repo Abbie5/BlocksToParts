@@ -24,7 +24,7 @@ public final class CategorySet {
         this.overlapping = overlapping;
     }
 
-    public boolean matches(Category category) {
+    public boolean contains(Category category) {
         return self.contains(category);
     }
 
@@ -46,7 +46,7 @@ public final class CategorySet {
         }
 
         for (Category category : other.getOverlappingCategories()) {
-            if (matches(category)) return true;
+            if (contains(category)) return true;
         }
 
         return false;
