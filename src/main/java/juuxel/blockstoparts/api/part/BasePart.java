@@ -29,6 +29,9 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
         super(def, holder);
     }
 
+    /**
+     * {@return the block state matching this part} Also used for {@link #getClosestBlockState()}.
+     */
     public abstract BlockState getBlockState();
 
     protected final World getWorld() {

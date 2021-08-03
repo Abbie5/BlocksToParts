@@ -24,7 +24,7 @@ public final class Category {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Category && id.equals(((Category) obj).id);
+        return obj instanceof Category other && id.equals(other.id);
     }
 
     @Override
