@@ -19,7 +19,7 @@ public final class CategorySet {
     private final Set<Category> self;
     private final Set<Category> overlapping;
 
-    protected CategorySet(Set<Category> self, Set<Category> overlapping) {
+    private CategorySet(Set<Category> self, Set<Category> overlapping) {
         this.self = self;
         this.overlapping = overlapping;
     }
