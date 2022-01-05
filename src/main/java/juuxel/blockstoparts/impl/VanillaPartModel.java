@@ -34,22 +34,25 @@ final class VanillaPartModel<K extends VanillaModelKey> implements PartModelBake
     private final Map<BlockState, BakedModel> modelWrappers = new HashMap<>();
 
     private BakedModel getWrapper(K key) {
-        return modelWrappers.computeIfAbsent(
-            key.getState(),
-            state -> new ForwardingBakedModel() {
+        BlockState keyState = key.getState();
+
+        if (!modelWrappers.containsKey(keyState)) {
+            modelWrappers.put(keyState, new ForwardingBakedModel() {
                 {
                     wrapped = MinecraftClient.getInstance()
                         .getBakedModelManager()
                         .getBlockModels()
-                        .getModel(key.getState());
+                        .getModel(keyState);
                 }
 
                 @Override
-                public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
-                    return super.getQuads(state, face, rand);
+                public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random random) {
+                    return super.getQuads(keyState, face, random);
                 }
-            }
-        );
+            });
+        }
+
+        return modelWrappers.get(keyState);
     }
 
     @Override
