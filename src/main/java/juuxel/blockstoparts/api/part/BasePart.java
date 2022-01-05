@@ -12,16 +12,10 @@ import alexiil.mc.lib.multipart.api.PartDefinition;
 import juuxel.blockstoparts.api.category.Categorizable;
 import juuxel.blockstoparts.api.category.CategorySet;
 import juuxel.blockstoparts.api.util.BtpUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public abstract class BasePart extends AbstractPart implements Categorizable {
@@ -42,44 +36,24 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
         return this.holder.getContainer().getMultipartPos();
     }
 
+    /**
+     * @deprecated Replace with {@link #breakPart()}.
+     */
+    @Deprecated
     protected final void removeAndDrop() {
-        drop();
-        getWorld().syncWorldEvent(2001, getPos(), Block.getRawIdFromState(getBlockState()));
-        this.holder.remove();
+        breakPart();
     }
 
-    private void drop() {
-        Vec3d pos = Vec3d.ofCenter(getPos());
-        LootContext context = new LootContext.Builder((ServerWorld) getWorld())
-            .random(getWorld().getRandom())
-            .parameter(LootContextParameters.BLOCK_STATE, getBlockState())
-            .parameter(LootContextParameters.ORIGIN, pos)
-            .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
-            .build(LootContextTypes.BLOCK);
-
-        ItemDropTarget dropTarget = new ItemDropTarget() {
-            @Override
-            public void drop(ItemStack stack) {
-                drop(stack, pos);
-            }
-
-            @Override
-            public void drop(ItemStack stack, Vec3d pos) {
-                ItemScatterer.spawn(getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack);
-            }
-
-            @Override
-            public void drop(ItemStack stack, Vec3d pos, Vec3d velocity) {
-                drop(stack, pos);
-            }
-
-            @Override
-            public boolean dropsAsEntity() {
-                return false;
-            }
-        };
-
-        addDrops(dropTarget, context);
+    /**
+     * Removes this part from the container and drops its loot.
+     * Also plays the block break particles and sounds.
+     */
+    protected void breakPart() {
+        holder.remove(
+            MultipartHolder.PartRemoval.DROP_ITEMS,
+            MultipartHolder.PartRemoval.BREAK_PARTICLES,
+            MultipartHolder.PartRemoval.BREAK_SOUND
+        );
     }
 
     @Override
