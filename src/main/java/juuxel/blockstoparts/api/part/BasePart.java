@@ -15,8 +15,10 @@ import juuxel.blockstoparts.api.util.BtpUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BasePart extends AbstractPart implements Categorizable {
     public BasePart(PartDefinition def, MultipartHolder holder) {
@@ -57,7 +59,7 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
     }
 
     @Override
-    public ItemStack getPickStack() {
+    public ItemStack getPickStack(@Nullable BlockHitResult hitResult) {
         return new ItemStack(getBlockState().getBlock());
     }
 
