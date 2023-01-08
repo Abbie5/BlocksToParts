@@ -17,11 +17,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 final class VanillaPartModel<K extends VanillaModelKey> implements PartModelBaker<K> {
