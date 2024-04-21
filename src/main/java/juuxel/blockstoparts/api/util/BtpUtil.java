@@ -6,25 +6,24 @@
 
 package juuxel.blockstoparts.api.util;
 
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 
 public final class BtpUtil {
     /**
      * Converts a multipart loot context to a block loot context builder.
      *
-     * @param context the multipart loot context
+     * @param params the multipart loot context
      * @return the created builder
      */
-    public static LootContext.Builder toBlockLootContext(LootContext context) {
-        return new LootContext.Builder(context.getWorld())
-            .random(context.getRandom())
-            .luck(context.getLuck())
-            .parameter(LootContextParameters.BLOCK_STATE, context.get(LootContextParameters.BLOCK_STATE))
-            .parameter(LootContextParameters.ORIGIN, context.get(LootContextParameters.ORIGIN))
-            .parameter(LootContextParameters.TOOL, context.get(LootContextParameters.TOOL))
-            .optionalParameter(LootContextParameters.THIS_ENTITY, context.get(LootContextParameters.THIS_ENTITY))
-            .optionalParameter(LootContextParameters.BLOCK_ENTITY, context.get(LootContextParameters.BLOCK_ENTITY))
-            .optionalParameter(LootContextParameters.EXPLOSION_RADIUS, context.get(LootContextParameters.EXPLOSION_RADIUS));
+    public static LootContextParameterSet.Builder toBlockLootContext(LootContextParameterSet params) {
+        return new LootContextParameterSet.Builder(params.getWorld())
+            .luck(params.getLuck())
+            .add(LootContextParameters.BLOCK_STATE, params.get(LootContextParameters.BLOCK_STATE))
+            .add(LootContextParameters.ORIGIN, params.get(LootContextParameters.ORIGIN))
+            .add(LootContextParameters.TOOL, params.get(LootContextParameters.TOOL))
+            .addOptional(LootContextParameters.THIS_ENTITY, params.getOptional(LootContextParameters.THIS_ENTITY))
+            .addOptional(LootContextParameters.BLOCK_ENTITY, params.getOptional(LootContextParameters.BLOCK_ENTITY))
+            .addOptional(LootContextParameters.EXPLOSION_RADIUS, params.getOptional(LootContextParameters.EXPLOSION_RADIUS));
     }
 }

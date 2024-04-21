@@ -14,7 +14,7 @@ import juuxel.blockstoparts.api.category.CategorySet;
 import juuxel.blockstoparts.api.util.BtpUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -74,8 +74,8 @@ public abstract class BasePart extends AbstractPart implements Categorizable {
     }
 
     @Override
-    public void addDrops(ItemDropTarget target, LootContext context) {
-        target.dropAll(getBlockState().getDroppedStacks(BtpUtil.toBlockLootContext(context)));
+    public void addDrops(ItemDropTarget target, LootContextParameterSet params) {
+        target.dropAll(getBlockState().getDroppedStacks(BtpUtil.toBlockLootContext(params)));
     }
 
     @Override
